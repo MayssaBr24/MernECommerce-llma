@@ -5,7 +5,9 @@ const cors = require('cors')
 const app = express();
 const CategorieRouter=require('./routes/categorie.route');
 const scategorieRouter =require("./routes/scategorie.route");
-const articleRouter =require("./routes/article.route")
+const articleRouter =require("./routes/article.route");
+const userRouter =require("./routes/user.route");
+const llmRouter=require('./routes/llm.routes.js')
 //config dotenv
 dotenv.config()
 //Les cors
@@ -25,6 +27,10 @@ app.get("/",(req,res)=>{
 app.use('/api/categories',CategorieRouter)
 app.use('/api/scategories', scategorieRouter);
 app.use('/api/articles', articleRouter);
+app.use('/api/users',userRouter);
+app.use('/api/llm', llmRouter);
+
 app.listen(process.env.PORT, () => {
     console.log(`Server is listening on port ${process.env.PORT}`); });
+
 module.exports = app;

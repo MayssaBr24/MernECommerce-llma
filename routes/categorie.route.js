@@ -81,4 +81,16 @@ router.delete('/:categorieId', async (req, res) => {
     }
 });
 
+// Chercher une catégorie par son nom
+router.get('/search/:name', async (req, res) => {
+    try {
+        const cat = await Categorie.findOne({
+            nomcategorie: { $regex: new RegExp(req.params.name, "i") }
+        });
+        res.status(200).json(cat);
+    } catch (error) {
+        res.status(404).json({ message: "Catégorie non trouvée" });
+    }
+});
+
 module.exports = router;

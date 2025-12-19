@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Article=require("../models/article")
 const Scategorie =require("../models/scategorie")
+const {verifyToken} =require("../middleware/verifytoken")
+const {authorizeRoles} = require("../middleware/authorizeRoles")
+
 // afficher la liste des articles.
 router.get('/', async (req, res, )=> {
     try {
@@ -70,7 +73,6 @@ router.get('/scat/:scategorieID',async(req, res)=>{
         res.status(404).json({ message: error.message });
     }
 });
-module.exports = router;
 // chercher un article par cat
 router.get('/cat/:categorieID', async (req, res) => {
     try {
@@ -104,3 +106,23 @@ router.get('/pagination', async(req, res) => {
         res.status(404).json({ message: error.message });
     }
 });
+// afficher la liste des articles.
+router.get('/', verifyToken, async (req, res )=> {
+    try {
+        const articles = await Article.find();
+        res.status(200).json(articles);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+// afficher la liste des articles.
+router.get('/',verifyToken,authorizeRoles("admin"),async (req, res
+)=> {
+    try {
+        const articles = await Article.find().populate("scategorieID").exec();
+        res.status(200).json(articles);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+module.exports = router;
